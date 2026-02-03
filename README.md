@@ -1,59 +1,97 @@
-# InventarioFrontend
+# Inventario Frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.19.
+Frontend del Sistema de Gestión de Inventarios, desarrollado con **Angular 19**.
 
-## Development server
+## Requisitos Previos
 
-To start a local development server, run:
+Antes de comenzar, asegúrate de tener instalado:
 
+- **Node.js** v18.19 o superior ([descargar](https://nodejs.org/))
+- **npm** v9 o superior (viene con Node.js)
+- **Angular CLI** v19 (se instala automáticamente como dependencia)
+
+Para verificar tus versiones:
 ```bash
-ng serve
+node -v
+npm -v
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Instalación
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
+1. Clona el repositorio y navega a la carpeta del frontend:
 ```bash
-ng generate component component-name
+cd inventario-frontend
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
+2. Instala las dependencias:
 ```bash
-ng generate --help
+npm install
 ```
 
-## Building
+## Comandos Disponibles
 
-To build the project run:
+### Desarrollo
 
+Inicia el servidor de desarrollo:
 ```bash
-ng build
+npm start
+```
+Abre tu navegador en `http://localhost:4200`. La app se recarga automáticamente con cada cambio.
+
+### Build
+
+Genera el build de producción:
+```bash
+npm run build
+```
+Los archivos compilados se guardan en `dist/`.
+
+### Tests
+
+Ejecuta los tests unitarios:
+```bash
+npm test
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## Estructura del Proyecto
 
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
+```
+src/app/
+├── auth/       # Autenticación (login, registro, guards)
+├── core/       # Servicios singleton, interceptors, utils
+├── layout/     # Header, sidebar, estructura visual
+├── modules/    # Módulos funcionales (productos, reportes)
+└── shared/     # Componentes y utilidades reutilizables
 ```
 
-## Running end-to-end tests
+Para más detalles, consulta la [documentación de estructura](./docs/STRUCTURE.md).
 
-For end-to-end (e2e) testing, run:
+## Variables de Entorno
 
-```bash
-ng e2e
-```
+Los archivos de configuración se encuentran en `src/environments/`:
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+| Archivo | Uso |
+|---------|-----|
+| `environment.development.ts` | Desarrollo local |
+| `environment.ts` | Producción |
 
-## Additional Resources
+## Scripts npm
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+| Comando | Descripción |
+|---------|-------------|
+| `npm start` | Servidor de desarrollo en `localhost:4200` |
+| `npm run build` | Build de producción |
+| `npm test` | Ejecutar tests unitarios |
+| `npm run watch` | Build en modo watch |
+
+## Tecnologías
+
+- **Angular 19** - Framework principal
+- **TypeScript 5.7** - Lenguaje
+- **RxJS 7.8** - Programación reactiva
+- **SCSS** - Estilos
+
+## Documentación Adicional
+
+- [Estructura del proyecto](./docs/STRUCTURE.md)
+- [Angular CLI Reference](https://angular.dev/tools/cli)
