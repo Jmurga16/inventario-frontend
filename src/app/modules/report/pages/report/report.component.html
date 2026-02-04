@@ -10,8 +10,10 @@
         @if (isDownloading) {
           <mat-spinner diameter="18"></mat-spinner>
         } @else {
-          <mat-icon>download</mat-icon>
-          Descargar PDF
+          <ng-container>
+            <mat-icon>download</mat-icon>
+            Descargar PDF
+          </ng-container>
         }
       </button>
     </div>

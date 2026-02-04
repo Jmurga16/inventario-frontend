@@ -18,7 +18,7 @@
                     [matBadgeHidden]="!unreadCount"
                     matBadgeColor="warn"
                     matBadgeOverlap="false"
-                    aria-hidden="true">notifications</mat-icon>
+                    aria-hidden="false">notifications</mat-icon>
             </button>
 
             <button mat-icon-button
@@ -63,7 +63,7 @@
                     [matBadgeHidden]="!unreadCount"
                     matBadgeColor="warn"
                     matBadgeOverlap="false"
-                    aria-hidden="true">notifications</mat-icon>
+                    aria-hidden="false">notifications</mat-icon>
             </button>
 
             <app-header-menu [items]="menuItems"></app-header-menu>
@@ -81,22 +81,24 @@
     </button>
     <mat-divider></mat-divider>
 
-    @if((notificationState.notifications$ | async); as notifications) {
-        @if(!notifications.length) {
-            <button mat-menu-item disabled>
-                <span>Sin notificaciones</span>
-            </button>
-        } @else {
-            @for (item of notifications; track item.id) {
-                <button mat-menu-item class="header__notification-item" (click)="markAsRead(item.id)">
-                    <span class="header__notification-dot" [class.is-unread]="!item.isRead"></span>
-                    <span class="header__notification-content">
-                        <span class="header__notification-title">{{ item.title }}</span>
-                        <span class="header__notification-description">{{ item.message }}</span>
-                        <span class="header__notification-time">{{ formatDate(item.createdAt) }}</span>
-                    </span>
+    <div class="header__notifications-list">
+        @if((notificationState.notifications$ | async); as notifications) {
+            @if(!notifications.length) {
+                <button mat-menu-item disabled>
+                    <span>Sin notificaciones</span>
                 </button>
+            } @else {
+                @for (item of notifications; track item.id) {
+                    <button mat-menu-item class="header__notification-item" [class.is-unread]="!item.isRead" (click)="markAsRead(item.id)">
+                        <span class="header__notification-dot" [class.is-unread]="!item.isRead"></span>
+                        <span class="header__notification-content">
+                            <span class="header__notification-title">{{ item.title }}</span>
+                            <span class="header__notification-description">{{ item.message }}</span>
+                            <span class="header__notification-time">{{ formatDate(item.createdAt) }}</span>
+                        </span>
+                    </button>
+                }
             }
         }
-    }
+    </div>
 </mat-menu>
