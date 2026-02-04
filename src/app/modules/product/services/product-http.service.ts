@@ -17,14 +17,10 @@ export class ProductHttpService {
   }
 
   search(params?: {
-    name?: string;
+    search?: string;
     categoryId?: number;
-    minPrice?: number;
-    maxPrice?: number;
-    minStock?: number;
-    maxStock?: number;
     isActive?: boolean;
-    lowStock?: boolean;
+    lowStockOnly?: boolean;
   }): Observable<ApiResponse<Product[]>> {
     let httpParams = new HttpParams();
 

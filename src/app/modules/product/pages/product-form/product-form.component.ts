@@ -14,6 +14,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { ProductHttpService } from '../../services/product-http.service';
 import { CategoryHttpService, Category } from '../../services/category-http.service';
 import { CreateProductDto, UpdateProductDto } from '../../models';
+import { NotificationStateService } from '../../../../core/services';
+import { AuthService } from '../../../../auth/services/auth.service';
 
 @Component({
   selector: 'app-product-form',
@@ -43,6 +45,12 @@ export class ProductFormComponent implements OnInit {
   private readonly snackBar = inject(MatSnackBar);
   private readonly productService = inject(ProductHttpService);
   private readonly categoryService = inject(CategoryHttpService);
+  private readonly notificationState = inject(NotificationStateService);
+  private readonly authService = inject(AuthService);
+
+  get isAdmin(): boolean {
+    return this.authService.hasRole('Admin');
+  }
 
   isEdit = false;
   isLoading = false;
@@ -67,12 +75,18 @@ export class ProductFormComponent implements OnInit {
   ngOnInit(): void {
     this.loadCategories();
     const idParam = this.route.snapshot.paramMap.get('id');
+
     if (idParam) {
       this.isEdit = true;
       this.productId = Number(idParam);
       this.loadProduct(this.productId);
       this.form.get('sku')?.disable();
-      //this.form.get('quantity')?.disable();
+    } else {
+      // Creating new product - only admin allowed
+      if (!this.isAdmin) {
+        this.router.navigate(['/main/products']);
+        return;
+      }
     }
   }
 
@@ -148,6 +162,7 @@ export class ProductFormComponent implements OnInit {
       this.productService.update(this.productId, dto).subscribe({
         next: () => {
           this.isSubmitting = false;
+          this.notificationState.refresh();
           this.snackBar.open('Producto actualizado', 'OK', { duration: 2500 });
           this.router.navigate(['/main/products']);
         },
@@ -175,6 +190,7 @@ export class ProductFormComponent implements OnInit {
     this.productService.create(dto).subscribe({
       next: () => {
         this.isSubmitting = false;
+        this.notificationState.refresh();
         this.snackBar.open('Producto creado', 'OK', { duration: 2500 });
         this.router.navigate(['/main/products']);
       },

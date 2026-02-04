@@ -1,7 +1,11 @@
 <mat-card class="product-form-card">
   <mat-card-header>
     <mat-card-title>
-      {{ isEdit ? "Editar producto" : "Nuevo producto" }}
+      @if (isAdmin) {
+        {{ isEdit ? "Editar producto" : "Nuevo producto" }}
+      } @else {
+        Detalle del producto
+      }
     </mat-card-title>
   </mat-card-header>
 
@@ -25,6 +29,7 @@
               matInput
               formControlName="sku"
               placeholder="SKU del producto"
+              [readonly]="!isAdmin"
             />
             <mat-error *ngIf="form.get('sku')?.hasError('required')"
               >Requerido</mat-error
@@ -37,6 +42,7 @@
               matInput
               formControlName="name"
               placeholder="Nombre del producto"
+              [readonly]="!isAdmin"
             />
             <mat-error *ngIf="form.get('name')?.hasError('required')"
               >Requerido</mat-error
@@ -46,13 +52,13 @@
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Descripción</mat-label>
-          <textarea matInput formControlName="description" rows="3"></textarea>
+          <textarea matInput formControlName="description" rows="3" [readonly]="!isAdmin"></textarea>
         </mat-form-field>
 
         <div class="form-row">
           <mat-form-field appearance="outline">
             <mat-label>Categoría</mat-label>
-            <mat-select formControlName="categoryId">
+            <mat-select formControlName="categoryId" [disabled]="!isAdmin">
               @for (cat of categories; track cat.id) {
                 <mat-option [value]="cat.id">{{ cat.name }}</mat-option>
               }
@@ -64,7 +70,7 @@
 
           <mat-form-field appearance="outline">
             <mat-label>Precio unitario</mat-label>
-            <input matInput type="number" formControlName="unitPrice" />
+            <input matInput type="number" formControlName="unitPrice" [readonly]="!isAdmin" />
             <mat-error *ngIf="form.get('unitPrice')?.hasError('required')"
               >Requerido</mat-error
             >
@@ -74,12 +80,12 @@
         <div class="form-row">
           <mat-form-field appearance="outline">
             <mat-label>Costo</mat-label>
-            <input matInput type="number" formControlName="cost" />
+            <input matInput type="number" formControlName="cost" [readonly]="!isAdmin" />
           </mat-form-field>
 
           <mat-form-field appearance="outline">
             <mat-label>Cantidad</mat-label>
-            <input matInput type="number" formControlName="quantity" />
+            <input matInput type="number" formControlName="quantity" [readonly]="!isAdmin" />
             <mat-error *ngIf="form.get('quantity')?.hasError('required')"
               >Requerido</mat-error
             >
@@ -89,7 +95,7 @@
         <div class="form-row">
           <mat-form-field appearance="outline">
             <mat-label>Stock mínimo</mat-label>
-            <input matInput type="number" formControlName="minStock" />
+            <input matInput type="number" formControlName="minStock" [readonly]="!isAdmin" />
             <mat-error *ngIf="form.get('minStock')?.hasError('required')"
               >Requerido</mat-error
             >
@@ -97,32 +103,40 @@
 
           <mat-form-field appearance="outline">
             <mat-label>Stock máximo</mat-label>
-            <input matInput type="number" formControlName="maxStock" />
+            <input matInput type="number" formControlName="maxStock" [readonly]="!isAdmin" />
           </mat-form-field>
         </div>
 
-        @if (isEdit) {
+        @if (isEdit && isAdmin) {
           <mat-slide-toggle formControlName="isActive"
             >Producto activo</mat-slide-toggle
           >
         }
 
+        @if (isEdit && !isAdmin) {
+          <div class="status-info">
+            <strong>Estado:</strong> {{ form.get('isActive')?.value ? 'Activo' : 'Inactivo' }}
+          </div>
+        }
+
         <div class="form-actions">
           <button mat-stroked-button type="button" (click)="cancel()">
-            Cancelar
+            {{ isAdmin ? 'Cancelar' : 'Volver' }}
           </button>
-          <button
-            mat-flat-button
-            color="primary"
-            type="submit"
-            [disabled]="isSubmitting"
-          >
-            @if (isSubmitting) {
-              <mat-spinner diameter="18"></mat-spinner>
-            } @else {
-              {{ isEdit ? "Guardar cambios" : "Crear producto" }}
-            }
-          </button>
+          @if (isAdmin) {
+            <button
+              mat-flat-button
+              color="primary"
+              type="submit"
+              [disabled]="isSubmitting"
+            >
+              @if (isSubmitting) {
+                <mat-spinner diameter="18"></mat-spinner>
+              } @else {
+                {{ isEdit ? "Guardar cambios" : "Crear producto" }}
+              }
+            </button>
+          }
         </div>
       </form>
     }
