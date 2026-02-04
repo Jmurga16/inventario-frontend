@@ -1,0 +1,21 @@
+<div class="app-container">
+
+  <app-header (toggleMenu)="drawer.toggle()"
+    [isMobile]="isMobile()"></app-header>
+
+  <mat-sidenav-container class="layout-container" role="region" aria-label="Contenedor principal de la aplicación">
+    <mat-sidenav #drawer
+      [mode]="isMobile() ? 'over' : 'side'"
+      [opened]="!isMobile() || drawerOpen()"
+      id="sidenav"
+      [attr.aria-hidden]="isMobile() && !drawerOpen()">
+      <app-sidenav></app-sidenav>
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+      <main class="main-container" role="main" aria-label="Contenido principal">
+        <router-outlet></router-outlet>
+      </main>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>

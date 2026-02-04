@@ -1,0 +1,59 @@
+@if (item(); as menuItem) {
+  @if (hasChildren()) {
+    <div class="menu-wrapper" role="listitem">
+      <mat-list-item
+        class="menu-item"
+        [matTooltip]="menuItem.title"
+        (click)="toggle()"
+        (keydown.enter)="toggle()"
+        (keydown.space)="toggle()"
+        tabindex="0"
+        role="button"
+        [attr.aria-expanded]="isExpanded()"
+        [attr.aria-label]="'Expandir menú ' + menuItem.title">
+        @if (menuItem.icon) {
+          <mat-icon matListItemIcon class="menu-item__icon" aria-hidden="true">
+            {{menuItem.icon}}
+          </mat-icon>
+        }
+        <div class="flex justify-between">
+          <span class="menu-item__title">{{menuItem.title}}</span>
+          <mat-icon [@rotatedState]="!isExpanded() ? 'default' : 'rotated'" aria-hidden="true">
+            keyboard_arrow_down
+          </mat-icon>
+        </div>
+      </mat-list-item>
+    </div>
+
+    <mat-nav-list [@smoothCollapse]="!isExpanded() ? 'initial' : 'final'"
+      [class.menu-collapsed]="!isExpanded()"
+      role="list"
+      [attr.aria-hidden]="!isExpanded()">
+      @for (subItem of menuItem.options; track $index) {
+        <app-sidenav-item [item]="subItem" class="child-item">
+        </app-sidenav-item>
+      }
+    </mat-nav-list>
+
+
+  } @else {
+    <div class="menu-wrapper" role="listitem">
+      <mat-list-item
+        class="menu-item"
+        [routerLink]="menuItem.url"
+        [matTooltip]="menuItem.title"
+        [class.active]="isActive()"
+        (click)="onOptionSelected()"
+        role="link"
+        [attr.aria-label]="'Navegar a ' + menuItem.title"
+        [attr.aria-current]="isActive() ? 'page' : null">
+        @if (menuItem.icon) {
+          <mat-icon matListItemIcon class="menu-item__icon material-icons-outlined" aria-hidden="true">
+            {{menuItem.icon}}
+          </mat-icon>
+        }
+        <span class="menu-item__title">{{menuItem.title}}</span>
+      </mat-list-item>
+    </div>
+  }
+}

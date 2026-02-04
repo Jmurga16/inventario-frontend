@@ -1,0 +1,31 @@
+.layout-container {
+  flex: 1;
+  overflow: hidden;
+}
+
+.layout-container {
+  min-height: calc(100% - 372.6px);
+  height: 100vh;
+
+  //Mobile
+  .mat-drawer.mat-drawer-over {
+    width: 85%;
+    background-color: var(--mat-app-primary, #ff6600);
+    border-radius: 0 !important;
+    z-index: 1200;
+  }
+
+  //Desktop
+  .mat-drawer.mat-drawer-side {
+    width: 260px;
+    background-color: var(--mat-app-primary, #ff6600);
+    z-index: 1000;
+    border-radius: 0 !important;
+  }
+
+  .mat-drawer.mat-drawer-end {
+    border-radius: unset;
+    border: 1px solid rgba(0, 86, 172, 0.1);
+    box-shadow: 0px 4px 20px 0px rgba(0, 86, 172, 0.1);
+  }
+}

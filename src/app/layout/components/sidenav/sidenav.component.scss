@@ -1,0 +1,35 @@
+.mdc-list {
+    padding: 1rem 0 !important;
+}
+
+.logout-divider {
+    margin: 1rem 0;
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.logout-item {
+    cursor: pointer;
+    color: white;
+    transition: background-color 0.2s ease;
+    padding: 0.5rem 2rem !important;
+
+    &:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    mat-icon {
+        color: white;
+    }
+}
+
+// Solo mostrar en mobile
+.mobile-only {
+    display: block;
+}
+
+// Ocultar en desktop (cuando el sidenav está en modo 'side')
+@media (min-width: 768px) {
+    .mobile-only {
+        display: none;
+    }
+}
