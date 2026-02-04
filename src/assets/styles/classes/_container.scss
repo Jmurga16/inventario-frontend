@@ -1,0 +1,40 @@
+@use '../mixins/breakpoints.mixin' as breakpoints;
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100%;
+  position: relative;
+}
+
+.main-container {
+  margin: 0 auto;
+  width: 100%;
+  padding: 16px;
+
+  @include breakpoints.media-breakpoint("xs") {
+    padding-left: 16px;
+    padding-right: 16px;
+    width: auto;
+  }
+
+  @include breakpoints.media-breakpoint("sm") {
+    max-width: 720px;
+    padding: 16px 16px 0;
+    width: auto;
+  }
+
+  @include breakpoints.media-breakpoint("md") {
+    max-width: 960px;
+    padding: 16px 16px 0;
+  }
+
+  @include breakpoints.media-breakpoint("lg") {
+    max-width: 1280px;
+  }
+
+  @include breakpoints.media-breakpoint("xl") {
+    max-width: 1920px;
+  }
+}

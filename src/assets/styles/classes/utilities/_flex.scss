@@ -1,0 +1,165 @@
+@use '../../mixins/breakpoints.mixin' as breakpoints;
+@use '../../variables/breakpoints.var' as breakpointVars;
+
+// Utilities más genéricas al estilo Tailwind/Bootstrap
+.flex {
+    display: flex;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+.items-center {
+    align-items: center;
+}
+
+// Sistema de columnas al estilo Bootstrap
+// Contenedor
+.container {
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+// Fila
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: -15px;
+    margin-left: -15px;
+}
+
+// Columnas básicas (12 columnas)
+@for $i from 1 through 12 {
+    .col-#{$i} {
+        flex: 0 0 calc(#{$i} / 12 * 100%);
+        max-width: calc(#{$i} / 12 * 100%);
+        padding-right: 15px;
+        padding-left: 15px;
+    }
+}
+
+// Responsive breakpoints como Bootstrap
+@each $breakpointName, $breakpointValue in breakpointVars.$breakpoints {
+    @include breakpoints.media-breakpoint($breakpointName) {
+        @for $i from 1 through 12 {
+            .col-#{$breakpointName}-#{$i} {
+                flex: 0 0 calc(#{$i} / 12 * 100%);
+                max-width: calc(#{$i} / 12 * 100%);
+                padding-right: 15px;
+                padding-left: 15px;
+            }
+        }
+    }
+}
+
+// Offsetting columns
+@for $i from 0 through 11 {
+    .offset-#{$i} {
+        margin-left: calc(#{$i} / 12 * 100%);
+    }
+}
+
+// Clases de orden
+@for $i from 1 through 12 {
+    .order-#{$i} {
+        order: $i;
+    }
+}
+
+// Utilidades flexbox al estilo Bootstrap
+.d-flex {
+    display: flex !important;
+}
+
+.d-inline-flex {
+    display: inline-flex !important;
+}
+
+.flex-row {
+    flex-direction: row !important;
+}
+
+.flex-column {
+    flex-direction: column !important;
+}
+
+.flex-row-reverse {
+    flex-direction: row-reverse !important;
+}
+
+.flex-column-reverse {
+    flex-direction: column-reverse !important;
+}
+
+.flex-wrap {
+    flex-wrap: wrap !important;
+}
+
+.flex-nowrap {
+    flex-wrap: nowrap !important;
+}
+
+.justify-content-start {
+    justify-content: flex-start !important;
+}
+
+.justify-content-end {
+    justify-content: flex-end !important;
+}
+
+.justify-content-center {
+    justify-content: center !important;
+}
+
+.justify-content-between {
+    justify-content: space-between !important;
+}
+
+.justify-content-around {
+    justify-content: space-around !important;
+}
+
+.align-items-start {
+    align-items: flex-start !important;
+}
+
+.align-items-end {
+    align-items: flex-end !important;
+}
+
+.align-items-center {
+    align-items: center !important;
+}
+
+.align-items-baseline {
+    align-items: baseline !important;
+}
+
+.align-items-stretch {
+    align-items: stretch !important;
+}
+
+// Responsive utilities
+@each $breakpointName, $breakpointValue in breakpointVars.$breakpoints {
+    @include breakpoints.media-breakpoint($breakpointName) {
+        .d-#{$breakpointName}-flex {
+            display: flex !important;
+        }
+
+        .d-#{$breakpointName}-none {
+            display: none !important;
+        }
+
+        .flex-#{$breakpointName}-row {
+            flex-direction: row !important;
+        }
+
+        .flex-#{$breakpointName}-column {
+            flex-direction: column !important;
+        }
+    }
+}

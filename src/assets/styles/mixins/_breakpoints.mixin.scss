@@ -1,0 +1,13 @@
+@use '../variables/breakpoints.var' as breakpoints;
+
+@mixin media-breakpoint($breakpointName) {
+  $mediaQuery: breakpoints.get($breakpointName);
+
+  @if ($mediaQuery == null) {
+    @content;
+  } @else {
+    @media #{$mediaQuery} {
+      @content;
+    }
+  }
+}

@@ -1,0 +1,19 @@
+.app-btn {
+  &--sm {
+    min-width: 133px !important;
+    height: 40px !important;
+    font-size: 16px !important;
+  }
+
+  &--md {
+    min-width: 155px !important;
+    height: 48px !important;
+    font-size: 18px !important;
+  }
+
+  &--lg {
+    min-width: 171px !important;
+    height: 52px !important;
+    font-size: 18px !important;
+  }
+}

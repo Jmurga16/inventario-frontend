@@ -1,0 +1,41 @@
+@use '../../mixins/breakpoints.mixin' as breakpoints;
+@use '../../variables/breakpoints.var' as breakpointVars;
+
+
+.grid {
+  display: grid;
+}
+
+// Columnas
+@for $i from 1 through 12 {
+  .grid-cols-#{$i} {
+    grid-template-columns: repeat($i, minmax(0, 1fr));
+  }
+
+  .col-span-#{$i} {
+    grid-column: span #{$i} / span #{$i};
+  }
+
+  .col-start-#{$i} {
+    grid-column-start: #{$i};
+  }
+}
+
+// Clases responsivas usando los breakpoints
+@each $breakpointName, $breakpointValue in breakpointVars.$breakpoints {
+  @include breakpoints.media-breakpoint($breakpointName) {
+    @for $i from 1 through 12 {
+      .#{$breakpointName}\:grid-cols-#{$i} {
+        grid-template-columns: repeat($i, minmax(0, 1fr));
+      }
+
+      .#{$breakpointName}\:col-span-#{$i} {
+        grid-column: span #{$i} / span #{$i};
+      }
+
+      .#{$breakpointName}\:col-start-#{$i} {
+        grid-column-start: #{$i};
+      }
+    }
+  }
+}

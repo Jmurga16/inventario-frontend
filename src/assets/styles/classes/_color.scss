@@ -1,0 +1,15 @@
+@use "../variables/palette.var";
+
+@each $key, $value in palette.$colors {
+  .app-color-#{$key} {
+    color: #{$value} !important;
+  }
+
+  .app-bg-#{$key} {
+    background-color: #{$value} !important;
+  }
+
+  .app-border-#{$key} {
+    border-color: #{$value} !important;
+  }
+}

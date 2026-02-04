@@ -1,0 +1,38 @@
+$spacing-scale: (
+  0: 0,
+  1: 0.25rem,
+  2: 0.5rem,
+  3: 0.75rem,
+  4: 1rem,
+  5: 1.25rem,
+  6: 1.5rem,
+  8: 2rem,
+  10: 2.5rem,
+  12: 3rem,
+  13: 5rem,
+  14: 10rem,
+  15: 15rem,
+  16: 20rem,
+  17: 30rem,
+  18: 50rem,
+  19: 80rem,
+  20: 100rem,
+  auto: auto,
+  full:100%
+);
+
+.full-width {
+  width: 100%;
+}
+
+@each $key, $value in $spacing-scale {
+  .w-#{$key} {
+    width: $value !important;
+  }
+}
+
+@each $key, $value in $spacing-scale {
+  .h-#{$key} {
+    height: $value !important;
+  }
+}
