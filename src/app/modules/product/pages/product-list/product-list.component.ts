@@ -6,6 +6,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { MatTableModule } from '@angular/material/table';
 import { ProductHttpService } from '../../services/product-http.service';
 import { Product } from '../../models';
@@ -21,7 +23,9 @@ import { Product } from '../../models';
     MatIconModule,
     MatProgressSpinnerModule,
     MatSnackBarModule,
-    MatTableModule
+    MatTableModule,
+    MatDialogModule,
+    ConfirmDialogComponent
   ],
   templateUrl: './product-list.component.html',
   styleUrl: './product-list.component.scss'
@@ -30,6 +34,7 @@ export class ProductListComponent implements OnInit {
 
   private readonly productService = inject(ProductHttpService);
   private readonly snackBar = inject(MatSnackBar);
+  private readonly dialog = inject(MatDialog);
 
   products: Product[] = [];
   displayedColumns = ['sku', 'name', 'category', 'price', 'quantity', 'status', 'actions'];
@@ -57,17 +62,24 @@ export class ProductListComponent implements OnInit {
   }
 
   deleteProduct(product: Product): void {
-    const confirmed = confirm(`¿Eliminar "${product.name}"?`);
-    if (!confirmed) return;
-
-    this.productService.delete(product.id).subscribe({
-      next: () => {
-        this.products = this.products.filter(p => p.id !== product.id);
-        this.snackBar.open('Producto eliminado', 'OK', { duration: 2500 });
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Confirmar eliminación',
+        message: `¿Eliminar "${product.name}"?`
       },
-      error: (error) => {
-        this.errorMessage = error.error?.message || 'No se pudo eliminar el producto';
-      }
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+      if (!confirmed) return;
+      this.productService.delete(product.id).subscribe({
+        next: () => {
+          this.products = this.products.filter(p => p.id !== product.id);
+          this.snackBar.open('Producto eliminado', 'OK', { duration: 2500 });
+        },
+        error: (error) => {
+          this.errorMessage = error.error?.message || 'No se pudo eliminar el producto';
+        }
+      });
     });
   }
 

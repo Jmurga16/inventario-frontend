@@ -1,9 +1,6 @@
-//@use 'variables/palette.var' as palette;
-
 .header {
 
     &__toolbar {
-
 
         &--mobile {
             height: 72px;
@@ -16,7 +13,7 @@
             background-color: #274ab1;
             color: white;
             border-bottom: 1px solid white;
-            padding: 0 2rem
+            padding: 0 2rem;
         }
     }
 
@@ -26,8 +23,13 @@
         filter: invert(1);
     }
 
-    &__icon-menu {
+    &__icon-menu,
+    &__icon-notifications {
         color: white;
+    }
+
+    &__btn-notifications {
+        margin-right: 0.5rem;
     }
 
     &__spacer {
@@ -39,4 +41,53 @@
         margin-left: 2rem;
     }
 
+    &__notifications-menu {
+        min-width: 320px;
+        max-width: 380px;
+    }
+
+    &__notifications-title {
+        opacity: 1;
+        cursor: default;
+    }
+
+    &__notification-item {
+        align-items: flex-start;
+        gap: 10px;
+        white-space: normal;
+    }
+
+    &__notification-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: #cfd8dc;
+        margin-top: 6px;
+        flex: 0 0 auto;
+    }
+
+    &__notification-dot.is-unread {
+        background-color: #ffb300;
+    }
+
+    &__notification-content {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    &__notification-title {
+        font-weight: 600;
+        font-size: 13px;
+    }
+
+    &__notification-description {
+        font-size: 12px;
+        color: #455a64;
+    }
+
+    &__notification-time {
+        font-size: 11px;
+        color: #78909c;
+    }
 }

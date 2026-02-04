@@ -3,19 +3,28 @@
         <mat-toolbar color="primary"
             class="header__toolbar header__toolbar--mobile"
             role="navigation"
-            aria-label="Barra de navegación principal">
-
-            <!-- <img src="assets/images/logo.png"
-                alt="Logo"
-                class="header__logo"
-                role="img"> -->
+            aria-label="Barra de navegacion principal">
 
             <span class="header__spacer" aria-hidden="true"></span>
 
             <button mat-icon-button
+                [matMenuTriggerFor]="notificationsMenu"
+                class="header__btn-notifications"
+                aria-label="Notificaciones"
+                type="button">
+                <mat-icon
+                    class="header__icon-notifications"
+                    [matBadge]="unreadCount"
+                    [matBadgeHidden]="!unreadCount"
+                    matBadgeColor="warn"
+                    matBadgeOverlap="false"
+                    aria-hidden="true">notifications</mat-icon>
+            </button>
+
+            <button mat-icon-button
                 (click)="onToggleMenu()"
                 class="header__btn-menu"
-                aria-label="Abrir menú de navegación"
+                aria-label="Abrir menu de navegacion"
                 aria-controls="sidenav"
                 type="button">
                 <mat-icon class="header__icon-menu" aria-hidden="true">menu</mat-icon>
@@ -28,24 +37,64 @@
         <mat-toolbar color="primary"
             class="header__toolbar header__toolbar--desktop"
             role="navigation"
-            aria-label="Barra de navegación principal">
+            aria-label="Barra de navegacion principal">
             @if(showLogo()){
-                <!-- <img src="assets/images/logo-atom-chat.png"
-                    alt="Logo"
-                    class="header__logo"
-                    role="img"> -->
+                <!-- Logo opcional -->
             }
             <button mat-icon-button
                 (click)="onToggleMenu()"
                 class="header__btn-menu"
-                aria-label="Alternar menú lateral"
+                aria-label="Alternar menu lateral"
                 aria-controls="sidenav"
                 type="button">
                 <mat-icon class="header__icon-menu" aria-hidden="true">menu</mat-icon>
             </button>
             <span class="header__app-title" role="heading" aria-level="1">Inventario</span>
             <span class="header__spacer" aria-hidden="true"></span>
+
+            <button mat-icon-button
+                [matMenuTriggerFor]="notificationsMenu"
+                class="header__btn-notifications"
+                aria-label="Notificaciones"
+                type="button">
+                <mat-icon
+                    class="header__icon-notifications"
+                    [matBadge]="unreadCount"
+                    [matBadgeHidden]="!unreadCount"
+                    matBadgeColor="warn"
+                    matBadgeOverlap="false"
+                    aria-hidden="true">notifications</mat-icon>
+            </button>
+
             <app-header-menu [items]="menuItems"></app-header-menu>
         </mat-toolbar>
     </header>
 }
+
+<mat-menu #notificationsMenu="matMenu" class="header__notifications-menu">
+    <button mat-menu-item disabled class="header__notifications-title">
+        <span>Notificaciones</span>
+    </button>
+    <button mat-menu-item (click)="markAllAsRead()" [disabled]="!unreadCount">
+        <mat-icon>done_all</mat-icon>
+        <span>Marcar todas como leidas</span>
+    </button>
+    <mat-divider></mat-divider>
+
+    @if(!notifications.length) {
+        <button mat-menu-item disabled>
+            <span>Sin notificaciones</span>
+        </button>
+    } @else {
+        @for (item of notifications; track item.id) {
+            <button mat-menu-item class="header__notification-item" (click)="markAsRead(item.id)">
+                <span class="header__notification-dot" [class.is-unread]="!item.isRead"></span>
+                <span class="header__notification-content">
+                    <span class="header__notification-title">{{ item.title }}</span>
+                    <span class="header__notification-description">{{ item.message }}</span>
+                    <span class="header__notification-time">{{ formatDate(item.createdAt) }}</span>
+                </span>
+            </button>
+        }
+    }
+</mat-menu>
