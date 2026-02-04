@@ -33,6 +33,7 @@ export interface UpdateProductDto {
     description?: string;
     categoryId: number;
     unitPrice: number;
+    quantity: number;
     cost?: number;
     minStock: number;
     maxStock?: number;

@@ -25,7 +25,6 @@ import { Product } from '../../models';
     MatSnackBarModule,
     MatTableModule,
     MatDialogModule,
-    ConfirmDialogComponent
   ],
   templateUrl: './product-list.component.html',
   styleUrl: './product-list.component.scss'

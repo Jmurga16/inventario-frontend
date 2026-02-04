@@ -10,7 +10,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatSelectModule } from '@angular/material/select';
 import { ProductHttpService } from '../../services/product-http.service';
+import { CategoryHttpService, Category } from '../../services/category-http.service';
 import { CreateProductDto, UpdateProductDto } from '../../models';
 
 @Component({
@@ -27,7 +29,8 @@ import { CreateProductDto, UpdateProductDto } from '../../models';
     MatInputModule,
     MatProgressSpinnerModule,
     MatSnackBarModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    MatSelectModule
   ],
   templateUrl: './product-form.component.html',
   styleUrl: './product-form.component.scss'
@@ -39,12 +42,14 @@ export class ProductFormComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly snackBar = inject(MatSnackBar);
   private readonly productService = inject(ProductHttpService);
+  private readonly categoryService = inject(CategoryHttpService);
 
   isEdit = false;
   isLoading = false;
   isSubmitting = false;
   errorMessage = '';
   productId: number | null = null;
+  categories: any[] = [];
 
   form = this.fb.group({
     sku: ['', [Validators.required, Validators.maxLength(50)]],
@@ -60,14 +65,26 @@ export class ProductFormComponent implements OnInit {
   });
 
   ngOnInit(): void {
+    this.loadCategories();
     const idParam = this.route.snapshot.paramMap.get('id');
     if (idParam) {
       this.isEdit = true;
       this.productId = Number(idParam);
       this.loadProduct(this.productId);
       this.form.get('sku')?.disable();
-      this.form.get('quantity')?.disable();
+      //this.form.get('quantity')?.disable();
     }
+  }
+
+  loadCategories(): void {
+    this.categoryService.getActive().subscribe({
+      next: (response) => {
+        this.categories = response.data ?? [];
+      },
+      error: () => {
+        this.categories = [];
+      }
+    });
   }
 
   loadProduct(id: number): void {
@@ -121,6 +138,7 @@ export class ProductFormComponent implements OnInit {
         description: raw.description?.trim() || undefined,
         categoryId: this.toNumber(raw.categoryId),
         unitPrice: this.toNumber(raw.unitPrice),
+        quantity: this.toNumber(raw.quantity),
         cost: raw.cost !== null ? this.toNumber(raw.cost) : undefined,
         minStock: this.toNumber(raw.minStock),
         maxStock: raw.maxStock !== null ? this.toNumber(raw.maxStock) : undefined,
