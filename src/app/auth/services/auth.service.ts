@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { AuthResponse, LoginRequest, RegisterRequest } from '../models';
+import { ApiResponse } from '../../core/models/api-response.model';
 import { TokenService } from './token.service';
 
 @Injectable({
@@ -16,23 +17,23 @@ export class AuthService {
     private readonly tokenService = inject(TokenService);
     private readonly apiUrl = `${environment.apiUrl}/api/auth`;
 
-    login(request: LoginRequest): Observable<AuthResponse> {
-        return this.http.post<AuthResponse>(`${this.apiUrl}/login`, request).pipe(
+    login(request: LoginRequest): Observable<ApiResponse<AuthResponse>> {
+        return this.http.post<ApiResponse<AuthResponse>>(`${this.apiUrl}/login`, request).pipe(
             tap(response => {
-                if (response?.token) {
-                    this.tokenService.setToken(response.token);
-                    this.storeUser(response.user);
+                if (response?.data?.token) {
+                    this.tokenService.setToken(response.data.token);
+                    this.storeUser(response.data.user);
                 }
             })
         );
     }
 
-    register(request: RegisterRequest): Observable<AuthResponse> {
-        return this.http.post<AuthResponse>(`${this.apiUrl}/register`, request).pipe(
+    register(request: RegisterRequest): Observable<ApiResponse<AuthResponse>> {
+        return this.http.post<ApiResponse<AuthResponse>>(`${this.apiUrl}/register`, request).pipe(
             tap(response => {
-                if (response?.token) {
-                    this.tokenService.setToken(response.token);
-                    this.storeUser(response.user);
+                if (response?.data?.token) {
+                    this.tokenService.setToken(response.data.token);
+                    this.storeUser(response.data.user);
                 }
             })
         );

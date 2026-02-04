@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-const TOKEN_KEY = 'AuthToken_ATOM_APP';
+const TOKEN_KEY = 'AuthToken_Test_APP';
 
 @Injectable({
     providedIn: 'root'

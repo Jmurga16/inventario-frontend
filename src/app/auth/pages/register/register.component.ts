@@ -7,6 +7,7 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { MatIconModule } from "@angular/material/icon";
+import { MatSnackBar, MatSnackBarModule } from "@angular/material/snack-bar";
 import { finalize } from "rxjs";
 import { AuthService } from "../../services/auth.service";
 import { RegisterRequest } from "../../models";
@@ -22,7 +23,8 @@ import { RegisterRequest } from "../../models";
         MatInputModule,
         MatButtonModule,
         MatProgressSpinnerModule,
-        MatIconModule
+        MatIconModule,
+        MatSnackBarModule
     ],
     templateUrl: "./register.component.html",
     styleUrl: "./register.component.scss"
@@ -32,6 +34,7 @@ export class RegisterComponent {
     private router = inject(Router);
     private authService = inject(AuthService);
     private fb = inject(FormBuilder);
+    private snackBar = inject(MatSnackBar);
 
     registerForm: FormGroup = this.fb.group({
         firstName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
@@ -71,6 +74,7 @@ export class RegisterComponent {
             .pipe(finalize(() => this.isLoading = false))
             .subscribe({
                 next: () => {
+                    this.snackBar.open('Cuenta creada con éxito', 'OK', { duration: 2500 });
                     this.router.navigate(['/main/home']);
                 },
                 error: (error) => {
