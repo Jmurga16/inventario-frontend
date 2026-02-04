@@ -3,10 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
-
-import { LoginUserDto } from '../models/login-user-dto.class';
-import { AuthResponse } from '../models';
-import { ApiResponse } from '../../core/models';
+import { AuthResponse, LoginRequest, RegisterRequest } from '../models';
 import { TokenService } from './token.service';
 
 @Injectable({
@@ -17,14 +14,25 @@ export class AuthService {
     private readonly http = inject(HttpClient);
     private readonly router = inject(Router);
     private readonly tokenService = inject(TokenService);
-    private readonly apiUrl = `${environment.apiUrl}/api/users`;
+    private readonly apiUrl = `${environment.apiUrl}/api/auth`;
 
-
-    login(request: LoginUserDto): Observable<ApiResponse<AuthResponse>> {
-        return this.http.post<ApiResponse<AuthResponse>>(`${this.apiUrl}/login`, request).pipe(
+    login(request: LoginRequest): Observable<AuthResponse> {
+        return this.http.post<AuthResponse>(`${this.apiUrl}/login`, request).pipe(
             tap(response => {
-                if (response.data?.token) {
-                    this.tokenService.setToken(response.data.token);
+                if (response?.token) {
+                    this.tokenService.setToken(response.token);
+                    this.storeUser(response.user);
+                }
+            })
+        );
+    }
+
+    register(request: RegisterRequest): Observable<AuthResponse> {
+        return this.http.post<AuthResponse>(`${this.apiUrl}/register`, request).pipe(
+            tap(response => {
+                if (response?.token) {
+                    this.tokenService.setToken(response.token);
+                    this.storeUser(response.user);
                 }
             })
         );
@@ -32,7 +40,32 @@ export class AuthService {
 
     logout(): void {
         this.tokenService.removeToken();
+        localStorage.removeItem('user');
         this.router.navigate(['auth/login']);
     }
 
+    isAuthenticated(): boolean {
+        return this.tokenService.isAuthenticated();
+    }
+
+    getCurrentUser(): AuthResponse['user'] | null {
+        const userStr = localStorage.getItem('user');
+        if (userStr) {
+            try {
+                return JSON.parse(userStr);
+            } catch {
+                return null;
+            }
+        }
+        return null;
+    }
+
+    hasRole(role: string): boolean {
+        const user = this.getCurrentUser();
+        return user?.roles?.includes(role) ?? false;
+    }
+
+    private storeUser(user: AuthResponse['user']): void {
+        localStorage.setItem('user', JSON.stringify(user));
+    }
 }

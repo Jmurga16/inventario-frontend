@@ -1,0 +1,129 @@
+<div class="auth-container">
+    <mat-card class="auth-card register-card">
+        <div class="auth-logo">
+            <mat-icon>person_add</mat-icon>
+        </div>
+
+        <h1 class="auth-title">Crear Cuenta</h1>
+        <p class="auth-subtitle">Completa tus datos para registrarte</p>
+
+        @if (errorMessage) {
+            <div class="auth-error">
+                <mat-icon>error_outline</mat-icon>
+                <span>{{ errorMessage }}</span>
+            </div>
+        }
+
+        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="auth-form">
+            <div class="auth-form-row">
+                <mat-form-field appearance="outline">
+                    <mat-label>Nombre</mat-label>
+                    <input matInput type="text" formControlName="firstName" autocomplete="given-name" />
+                    <mat-icon matPrefix>person</mat-icon>
+                    @if (registerForm.get('firstName')?.hasError('required') && registerForm.get('firstName')?.touched) {
+                        <mat-error>El nombre es requerido</mat-error>
+                    }
+                    @if (registerForm.get('firstName')?.hasError('minlength') && registerForm.get('firstName')?.touched) {
+                        <mat-error>M&#237;nimo 2 caracteres</mat-error>
+                    }
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Apellido</mat-label>
+                    <input matInput type="text" formControlName="lastName" autocomplete="family-name" />
+                    <mat-icon matPrefix>person</mat-icon>
+                    @if (registerForm.get('lastName')?.hasError('required') && registerForm.get('lastName')?.touched) {
+                        <mat-error>El apellido es requerido</mat-error>
+                    }
+                    @if (registerForm.get('lastName')?.hasError('minlength') && registerForm.get('lastName')?.touched) {
+                        <mat-error>M&#237;nimo 2 caracteres</mat-error>
+                    }
+                </mat-form-field>
+            </div>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Correo electr&#243;nico</mat-label>
+                <input matInput type="email" formControlName="email" autocomplete="email" />
+                <mat-icon matPrefix>email</mat-icon>
+                @if (registerForm.get('email')?.hasError('required') && registerForm.get('email')?.touched) {
+                    <mat-error>El correo es requerido</mat-error>
+                }
+                @if (registerForm.get('email')?.hasError('email') && registerForm.get('email')?.touched) {
+                    <mat-error>Ingresa un correo v&#225;lido</mat-error>
+                }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Tel&#233;fono (opcional)</mat-label>
+                <input matInput type="tel" formControlName="phone" autocomplete="tel" />
+                <mat-icon matPrefix>phone</mat-icon>
+                @if (registerForm.get('phone')?.hasError('pattern') && registerForm.get('phone')?.touched) {
+                    <mat-error>Formato de tel&#233;fono inv&#225;lido</mat-error>
+                }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Contrase&#241;a</mat-label>
+                <input matInput [type]="hidePassword ? 'password' : 'text'"
+                       formControlName="password" autocomplete="new-password" />
+                <mat-icon matPrefix>lock</mat-icon>
+                <mat-icon matSuffix class="password-toggle" (click)="togglePasswordVisibility()">
+                    {{ hidePassword ? 'visibility_off' : 'visibility' }}
+                </mat-icon>
+                @if (registerForm.get('password')?.hasError('required') && registerForm.get('password')?.touched) {
+                    <mat-error>La contrase&#241;a es requerida</mat-error>
+                }
+                @if (registerForm.get('password')?.hasError('minlength') && registerForm.get('password')?.touched) {
+                    <mat-error>M&#237;nimo 8 caracteres</mat-error>
+                }
+                @if (registerForm.get('password')?.hasError('passwordStrength') && registerForm.get('password')?.touched) {
+                    <mat-error>Debe incluir may&#250;scula, min&#250;scula, n&#250;mero y car&#225;cter especial</mat-error>
+                }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Confirmar contrase&#241;a</mat-label>
+                <input matInput [type]="hideConfirmPassword ? 'password' : 'text'"
+                       formControlName="confirmPassword" autocomplete="new-password" />
+                <mat-icon matPrefix>lock_outline</mat-icon>
+                <mat-icon matSuffix class="password-toggle" (click)="toggleConfirmPasswordVisibility()">
+                    {{ hideConfirmPassword ? 'visibility_off' : 'visibility' }}
+                </mat-icon>
+                @if (registerForm.get('confirmPassword')?.hasError('required') && registerForm.get('confirmPassword')?.touched) {
+                    <mat-error>Confirma tu contrase&#241;a</mat-error>
+                }
+                @if (registerForm.get('confirmPassword')?.hasError('passwordMismatch') && registerForm.get('confirmPassword')?.touched) {
+                    <mat-error>Las contrase&#241;as no coinciden</mat-error>
+                }
+            </mat-form-field>
+
+            <div class="password-requirements">
+                <p>La contrase&#241;a debe contener:</p>
+                <ul>
+                    <li>M&#237;nimo 8 caracteres</li>
+                    <li>Una letra may&#250;scula</li>
+                    <li>Una letra min&#250;scula</li>
+                    <li>Un n&#250;mero</li>
+                    <li>Un car&#225;cter especial (!&#64;#$%^&*)</li>
+                </ul>
+            </div>
+
+            <button mat-raised-button color="primary" type="submit"
+                    class="auth-submit-btn w-full" [disabled]="isLoading">
+                @if (isLoading) {
+                    <mat-spinner diameter="24"></mat-spinner>
+                } @else {
+                    Crear Cuenta
+                }
+            </button>
+        </form>
+
+        <div class="auth-divider">
+            <span>&#191;Ya tienes cuenta?</span>
+        </div>
+
+        <div class="auth-footer">
+            <a routerLink="/auth/login" class="auth-link">Iniciar Sesi&#243;n</a>
+        </div>
+    </mat-card>
+</div>
