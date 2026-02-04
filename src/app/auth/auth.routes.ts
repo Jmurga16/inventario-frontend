@@ -1,11 +1,23 @@
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
-  {
-    path: 'login',
-    loadComponent: () =>
-      import('./pages/login/login.component')
-        .then(m => m.LoginComponent),
-    title: 'Iniciar sesión'
-  }
+    {
+        path: 'login',
+        loadComponent: () =>
+            import('./pages/login/login.component')
+                .then(m => m.LoginComponent),
+        title: 'Iniciar Sesión'
+    },
+    {
+        path: 'register',
+        loadComponent: () =>
+            import('./pages/register/register.component')
+                .then(m => m.RegisterComponent),
+        title: 'Crear Cuenta'
+    },
+    {
+        path: '',
+        redirectTo: 'login',
+        pathMatch: 'full'
+    }
 ];

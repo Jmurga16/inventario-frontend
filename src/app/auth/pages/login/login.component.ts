@@ -1,38 +1,28 @@
 import { Component, inject } from "@angular/core";
-import { FormControl, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
-import { Router } from "@angular/router";
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
+import { Router, RouterLink } from "@angular/router";
 import { MatButtonModule } from "@angular/material/button";
 import { MatCardModule } from "@angular/material/card";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
-import { MatDialog } from "@angular/material/dialog";
+import { MatIconModule } from "@angular/material/icon";
 import { finalize } from "rxjs";
-import { UserHttpService } from "../../services/user-http.service";
-import { ConfirmDialogComponent } from "../../../shared/components/confirm-dialog/confirm-dialog.component";
-import { ConfirmDialogData } from "../../../shared/components/confirm-dialog/models/confirm-dialog-data.interface";
 import { AuthService } from "../../services/auth.service";
-import { LoginUserDto } from "../../models/login-user-dto.class";
-
-const ANGULAR_MODULES = [
-    ReactiveFormsModule,
-    FormsModule
-];
-
-const MATERIAL_MODULES = [
-    MatCardModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatProgressSpinnerModule
-];
+import { LoginRequest } from "../../models";
 
 @Component({
     selector: "app-login",
     standalone: true,
     imports: [
-        ANGULAR_MODULES,
-        ...MATERIAL_MODULES
+        ReactiveFormsModule,
+        RouterLink,
+        MatCardModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
+        MatProgressSpinnerModule,
+        MatIconModule
     ],
     templateUrl: "./login.component.html",
     styleUrl: "./login.component.scss"
@@ -40,76 +30,42 @@ const MATERIAL_MODULES = [
 export class LoginComponent {
 
     private router = inject(Router);
-    private userHttpService = inject(UserHttpService);
     private authService = inject(AuthService);
-    private dialog = inject(MatDialog);
+    private fb = inject(FormBuilder);
 
-    emailControl = new FormControl<string>("", [
-        Validators.required,
-        Validators.email
-    ]);
+    loginForm: FormGroup = this.fb.group({
+        email: ['', [Validators.required, Validators.email]],
+        password: ['', [Validators.required, Validators.minLength(8)]]
+    });
 
     isLoading = false;
+    hidePassword = true;
+    errorMessage = '';
 
-    onSubmit(event?: Event): void {
-        event?.preventDefault();
-
-        if (this.emailControl.invalid) {
-            this.emailControl.markAsTouched();
+    onSubmit(): void {
+        if (this.loginForm.invalid) {
+            this.loginForm.markAllAsTouched();
             return;
         }
 
         this.isLoading = true;
-        const email = this.emailControl.value;
+        this.errorMessage = '';
 
-        const loginUserDto: LoginUserDto = { email: email! };
+        const request: LoginRequest = this.loginForm.value;
 
-        this.authService.login(loginUserDto)
-            .pipe(finalize(() => { this.isLoading = false; }))
-            .subscribe({
-                next: (response) => {
-                    if (response.data?.exists) {
-                        this.goToTask();
-                    }
-                    else {
-                        this.openModalToCreateUser(email!);
-                    }
-                }
-            });
-
-    }
-
-    private openModalToCreateUser(email: string): void {
-        const dialogData: ConfirmDialogData = {
-            title: 'Usuario no encontrado',
-            message: `El usuario con email ${email} no existe. ¿Deseas crearlo?`,
-            confirmText: 'Crear',
-            cancelText: 'Cancelar'
-        };
-
-        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-            data: dialogData
-        });
-
-        dialogRef.afterClosed().subscribe(result => {
-            if (result) {
-                this.createUserAndNavigate(email);
-            }
-        });
-    }
-
-    private createUserAndNavigate(email: string): void {
-        this.isLoading = true;
-        this.userHttpService.create(email)
-            .pipe(finalize(() => { this.isLoading = false; }))
+        this.authService.login(request)
+            .pipe(finalize(() => this.isLoading = false))
             .subscribe({
                 next: () => {
-                    this.onSubmit();
+                    this.router.navigate(['/main/home']);
+                },
+                error: (error) => {
+                    this.errorMessage = error.error?.message || 'Credenciales incorrectas';
                 }
             });
     }
 
-    goToTask() {
-        this.router.navigate(["main/task"]);
+    togglePasswordVisibility(): void {
+        this.hidePassword = !this.hidePassword;
     }
 }

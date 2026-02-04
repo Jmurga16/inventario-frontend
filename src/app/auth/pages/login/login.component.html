@@ -1,33 +1,64 @@
-<div class="login-container">
-    <mat-card class="login-card" role="main" aria-labelledby="login-title">
-        <mat-card-header class="mb-4" >
-            <mat-card-title id="login-title" class="login-title" role="heading" aria-level="1">
-                Iniciar Sesión
-            </mat-card-title>
-        </mat-card-header>
+<div class="auth-container">
+    <mat-card class="auth-card">
+        <div class="auth-logo">
+            <mat-icon>inventory_2</mat-icon>
+        </div>
 
-        <mat-card-content>
-            <form (ngSubmit)="onSubmit($event)" aria-label="Formulario de inicio de sesión">
-                <mat-form-field appearance="outline" class="w-full mb-2">
-                    <mat-label>Correo electrónico</mat-label>
-                    <input matInput type="email" [formControl]="emailControl" autocomplete="email" aria-required="true"/>
-                    @if (emailControl.hasError('required') && emailControl.touched) {
-                        <mat-error>El correo es requerido</mat-error>
-                    }
-                    @if (emailControl.hasError('email') && emailControl.touched) {
-                        <mat-error>Ingresa un correo válido</mat-error>
-                    }
-                </mat-form-field>
+        <h1 class="auth-title">Bienvenido</h1>
+        <p class="auth-subtitle">Ingresa tus credenciales para continuar</p>
 
-                <button mat-raised-button color="primary" type="submit" class="w-full"
-                    [disabled]="isLoading" aria-label="Iniciar sesión con correo electrónico">
-                    @if (isLoading) {
-                        <mat-spinner diameter="20" aria-label="Cargando"></mat-spinner>
-                    } @else {
-                        Ingresar
-                    }
-                </button>
-            </form>
-        </mat-card-content>
+        @if (errorMessage) {
+            <div class="auth-error">
+                <mat-icon>error_outline</mat-icon>
+                <span>{{ errorMessage }}</span>
+            </div>
+        }
+
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="auth-form">
+            <mat-form-field appearance="outline">
+                <mat-label>Correo electr&#243;nico</mat-label>
+                <input matInput type="email" formControlName="email" autocomplete="email" />
+                <mat-icon matPrefix>email</mat-icon>
+                @if (loginForm.get('email')?.hasError('required') && loginForm.get('email')?.touched) {
+                    <mat-error>El correo es requerido</mat-error>
+                }
+                @if (loginForm.get('email')?.hasError('email') && loginForm.get('email')?.touched) {
+                    <mat-error>Ingresa un correo v&#225;lido</mat-error>
+                }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Contrase&#241;a</mat-label>
+                <input matInput [type]="hidePassword ? 'password' : 'text'"
+                       formControlName="password" autocomplete="current-password" />
+                <mat-icon matPrefix>lock</mat-icon>
+                <mat-icon matSuffix class="password-toggle" (click)="togglePasswordVisibility()">
+                    {{ hidePassword ? 'visibility_off' : 'visibility' }}
+                </mat-icon>
+                @if (loginForm.get('password')?.hasError('required') && loginForm.get('password')?.touched) {
+                    <mat-error>La contrase&#241;a es requerida</mat-error>
+                }
+                @if (loginForm.get('password')?.hasError('minlength') && loginForm.get('password')?.touched) {
+                    <mat-error>M&#237;nimo 8 caracteres</mat-error>
+                }
+            </mat-form-field>
+
+            <button mat-raised-button color="primary" type="submit"
+                    class="auth-submit-btn w-full" [disabled]="isLoading">
+                @if (isLoading) {
+                    <mat-spinner diameter="24"></mat-spinner>
+                } @else {
+                    Iniciar Sesi&#243;n
+                }
+            </button>
+        </form>
+
+        <div class="auth-divider">
+            <span>&#191;No tienes cuenta?</span>
+        </div>
+
+        <div class="auth-footer">
+            <a routerLink="/auth/register" class="auth-link">Crear una cuenta</a>
+        </div>
     </mat-card>
 </div>

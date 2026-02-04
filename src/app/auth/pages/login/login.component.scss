@@ -1,48 +1,21 @@
-.login-container {
-    min-height: 100vh;
+@import '../../styles/auth-shared.scss';
+
+.auth-error {
     display: flex;
     align-items: center;
     justify-content: center;
-    position: relative;
-    background: url('/assets/images/background_login.png') center center/cover no-repeat;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+    background-color: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 0.5rem;
+    color: #dc2626;
+    font-size: 0.875rem;
 
-    &::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background: rgba(255, 255, 255, 0.2);
-
-    }
-}
-
-.login-card {
-    min-width: 300px;
-    max-width: 400px;
-    width: 100%;
-    padding: 2rem;
-    text-align: center;
-    box-shadow: 0 12px 28px rgba(0, 0, 0, .14), 0 2px 6px rgba(0, 0, 0, .08);
-    border-radius: 1rem;
-    position: relative;
-    z-index: 1;
-    background-color: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-}
-
-.login-title {    
-    font-weight: 600;
-    color: #424242;
-}
-
-.mat-mdc-card-header {
-    display: flex;
-    justify-content: center;
-}
-
-@media (max-width: 600px) {
-    .login-card {
-        max-width: 100%;
-        min-width: 0;
+    mat-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
     }
 }
