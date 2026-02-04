@@ -47,7 +47,7 @@ export class ReportComponent implements OnInit {
     this.reportService.getLowStockData().subscribe({
       next: (response) => {
         this.data = response.data ?? null;
-        this.products = this.data?.Products ?? [];
+        this.products = this.data?.products ?? [];
         this.isLoading = false;
       },
       error: (error) => {

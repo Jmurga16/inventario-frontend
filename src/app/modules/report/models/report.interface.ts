@@ -1,7 +1,7 @@
 import { Product } from '../../product/models';
 
 export interface LowStockReportData {
-  GeneratedAt: string;
-  TotalProducts: number;
-  Products: Product[];
+  generatedAt: string;
+  totalProducts: number;
+  products: Product[];
 }
