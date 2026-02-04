@@ -40,9 +40,15 @@ export class SidenavComponent {
     },
     {
       id: 2,
-      title: 'Tasks',
-      icon: 'task',
-      url: '/main/task'
+      title: 'Productos',
+      icon: 'inventory',
+      url: '/main/products'
+    },
+    {
+      id:3,
+      title: 'Reporte',
+      icon: 'assessment',
+      url: '/main/report'
     }
   ]
 

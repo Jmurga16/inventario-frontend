@@ -5,10 +5,10 @@
             role="navigation"
             aria-label="Barra de navegación principal">
 
-            <img src="assets/images/logo-atom-chat.png"
-                alt="Logo de ATOM To-Do App"
+            <!-- <img src="assets/images/logo.png"
+                alt="Logo"
                 class="header__logo"
-                role="img">
+                role="img"> -->
 
             <span class="header__spacer" aria-hidden="true"></span>
 
@@ -30,10 +30,10 @@
             role="navigation"
             aria-label="Barra de navegación principal">
             @if(showLogo()){
-                <img src="assets/images/logo-atom-chat.png"
-                    alt="Logo de ATOM To-Do App"
+                <!-- <img src="assets/images/logo-atom-chat.png"
+                    alt="Logo"
                     class="header__logo"
-                    role="img">
+                    role="img"> -->
             }
             <button mat-icon-button
                 (click)="onToggleMenu()"
@@ -43,7 +43,7 @@
                 type="button">
                 <mat-icon class="header__icon-menu" aria-hidden="true">menu</mat-icon>
             </button>
-            <span class="header__app-title" role="heading" aria-level="1">To-Do App</span>
+            <span class="header__app-title" role="heading" aria-level="1">Inventario</span>
             <span class="header__spacer" aria-hidden="true"></span>
             <app-header-menu [items]="menuItems"></app-header-menu>
         </mat-toolbar>

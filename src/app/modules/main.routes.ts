@@ -6,7 +6,7 @@ export const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
-    canActivate: [AuthGuard],
+    //canActivate: [AuthGuard],
     children: [
       {
         path: '',
@@ -18,6 +18,11 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./home/home.component').then(m => m.HomeComponent),
         title: 'Inicio'
+      },
+      {
+        path: 'products',
+        loadChildren: () =>
+          import('./product/product.routes').then(m => m.routes)
       },
       
     ]

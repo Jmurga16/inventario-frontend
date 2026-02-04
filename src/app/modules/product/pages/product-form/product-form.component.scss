@@ -1,0 +1,35 @@
+.product-form-card {
+  width: 100%;
+}
+
+.loading-state,
+.error-state {
+  padding: 24px;
+  text-align: center;
+}
+
+.error-state {
+  color: #b00020;
+}
+
+.product-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
