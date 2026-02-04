@@ -5,4 +5,5 @@ export interface ISideMenuItem {
     url?: string;
     baseUrl?: string;
     options?: ISideMenuItem[];
+    roles?: string[];
 }

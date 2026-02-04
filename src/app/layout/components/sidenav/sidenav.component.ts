@@ -31,7 +31,7 @@ export class SidenavComponent {
 
   private readonly authService = inject(AuthService);
 
-  menuItems: ISideMenuItem[] = [
+  private readonly allMenuItems: ISideMenuItem[] = [
     {
       id: 1,
       title: 'Inicio',
@@ -45,12 +45,22 @@ export class SidenavComponent {
       url: '/main/products'
     },
     {
-      id:3,
+      id: 3,
       title: 'Reporte',
       icon: 'assessment',
-      url: '/main/report'
+      url: '/main/report',
+      roles: ['Admin']
     }
-  ]
+  ];
+
+  get menuItems(): ISideMenuItem[] {
+    return this.allMenuItems.filter(item => {
+      if (!item.roles || item.roles.length === 0) {
+        return true;
+      }
+      return item.roles.some(role => this.authService.hasRole(role));
+    });
+  }
 
   logout(): void {
     this.authService.logout();

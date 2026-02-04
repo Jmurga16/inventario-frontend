@@ -1,11 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HttpErrorResponse, HttpResponse } from '@angular/common/http';
-import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { Observable } from 'rxjs/internal/Observable';
 import { catchError } from 'rxjs/internal/operators/catchError';
-import { switchMap } from 'rxjs/internal/operators/switchMap';
-import { filter } from 'rxjs/internal/operators/filter';
-import { take } from 'rxjs/internal/operators/take';
 import { throwError } from 'rxjs/internal/observable/throwError';
 import { NotificationService } from '../services';
 import { of } from 'rxjs/internal/observable/of';
@@ -13,9 +9,6 @@ import { TokenService } from '../../auth/services/token.service';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
-
-  private isRefreshing = false;
-  private refreshTokenSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
 
   constructor(
     private notificationService: NotificationService,
@@ -41,26 +34,25 @@ export class ErrorInterceptor implements HttpInterceptor {
       }));
   }
 
-  private addAuthorizationHeader(request: HttpRequest<any>, token: string): HttpRequest<any> {
-    return request.clone({
-      setHeaders: { Authorization: `Bearer ${token}` }
-    });
-  }
-
   private handle401Error(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     console.log('handle401Error')
-    if (!this.isRefreshing) {
-      this.isRefreshing = true;
-      this.refreshTokenSubject.next(null);
 
-      this.tokenService.removeToken()
+    // Don't try to refresh for auth endpoints - just throw the error
+    if (request.url.includes('/auth/')) {
+      return throwError(() => new HttpErrorResponse({
+        error: { message: 'Credenciales incorrectas' },
+        status: 401,
+        statusText: 'Unauthorized'
+      }));
     }
 
-    return this.refreshTokenSubject.pipe(
-      filter(token => token !== null),
-      take(1),
-      switchMap((token) => next.handle(this.addAuthorizationHeader(request, token)))
-    );
+    // For other endpoints, clear token and throw error
+    this.tokenService.removeToken();
+    return throwError(() => new HttpErrorResponse({
+      error: { message: 'Sesión expirada' },
+      status: 401,
+      statusText: 'Unauthorized'
+    }));
   }
 
   private handleError(err: HttpErrorResponse): Observable<never> {

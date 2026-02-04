@@ -7,6 +7,13 @@ import { AuthResponse, LoginRequest, RegisterRequest } from '../models';
 import { ApiResponse } from '../../core/models/api-response.model';
 import { TokenService } from './token.service';
 
+interface StoredUser {
+    id: number;
+    email: string;
+    fullName: string;
+    roles: string[];
+}
+
 @Injectable({
     providedIn: 'root',
 })
@@ -22,7 +29,7 @@ export class AuthService {
             tap(response => {
                 if (response?.data?.token) {
                     this.tokenService.setToken(response.data.token);
-                    this.storeUser(response.data.user);
+                    this.storeUser(response.data);
                 }
             })
         );
@@ -33,7 +40,7 @@ export class AuthService {
             tap(response => {
                 if (response?.data?.token) {
                     this.tokenService.setToken(response.data.token);
-                    this.storeUser(response.data.user);
+                    this.storeUser(response.data);
                 }
             })
         );
@@ -49,7 +56,7 @@ export class AuthService {
         return this.tokenService.isAuthenticated();
     }
 
-    getCurrentUser(): AuthResponse['user'] | null {
+    getCurrentUser(): StoredUser | null {
         const userStr = localStorage.getItem('user');
         if (userStr) {
             try {
@@ -66,7 +73,13 @@ export class AuthService {
         return user?.roles?.includes(role) ?? false;
     }
 
-    private storeUser(user: AuthResponse['user']): void {
+    private storeUser(authResponse: AuthResponse): void {
+        const user: StoredUser = {
+            id: authResponse.userId,
+            email: authResponse.email,
+            fullName: authResponse.fullName,
+            roles: authResponse.roles
+        };
         localStorage.setItem('user', JSON.stringify(user));
     }
 }
