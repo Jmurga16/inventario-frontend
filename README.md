@@ -121,6 +121,48 @@ Para más detalles, consulta la [documentación de estructura](./docs/STRUCTURE.
 |-------|----------|-----|
 | admin@inventario.com | Admin123! | Admin |
 
+## Docker
+
+### Construir imagen
+
+```bash
+docker build -t inventario-frontend .
+```
+
+### Ejecutar contenedor
+
+```bash
+docker run -d -p 4200:80 --name inventario-frontend inventario-frontend
+```
+
+La aplicación estará disponible en: http://localhost:4200
+
+### Comandos útiles
+
+```bash
+# Ver logs
+docker logs inventario-frontend
+
+# Detener contenedor
+docker stop inventario-frontend
+
+# Eliminar contenedor
+docker rm inventario-frontend
+
+# Reconstruir imagen
+docker build -t inventario-frontend . --no-cache
+```
+
+### Archivos Docker
+
+| Archivo | Descripción |
+|---------|-------------|
+| `Dockerfile` | Multi-stage build: Node.js para compilar, Nginx para servir |
+| `nginx.conf` | Configuración de Nginx con routing SPA y headers de seguridad |
+| `.dockerignore` | Archivos excluidos del contexto de Docker |
+
+---
+
 ## Documentación Adicional
 
 - [Estructura del proyecto](./docs/STRUCTURE.md)
